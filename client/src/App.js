@@ -1,22 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import logo from './logo.svg';
+import logo from "./logo.svg";
 
-import './App.css';
+import "./App.css";
 
 class App extends Component {
   state = {
-    response: ''
+    response: ""
   };
 
   componentDidMount() {
     this.callApi()
       .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
+      .catch(err => {
+        window.myLogger.error(err);
+      });
   }
 
   callApi = async () => {
-    const response = await fetch('/api/hello');
+    const response = await fetch("/api/helloe");
     const body = await response.json();
 
     if (response.status !== 200) throw Error(body.message);
@@ -24,7 +26,12 @@ class App extends Component {
     return body;
   };
 
+  handleErrorClick() {
+    throw new Error("something wrong");
+  }
+
   render() {
+    window.myLogger.info("rendering");
     return (
       <div className="App">
         <header className="App-header">
@@ -32,6 +39,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <p className="App-intro">{this.state.response}</p>
+        <button onClick={this.handleErrorClick}>error</button>
       </div>
     );
   }
